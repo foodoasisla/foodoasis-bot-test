@@ -88,7 +88,8 @@ app.post("/add", function (request, response) {
 
   const MAPBOX_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(addressForGeocoding) + '.json';
 
-  requestPromise({
+  // Get the latitude and longitude
+  let geocode = requestPromise({
       uri: MAPBOX_URL,
       qs: {
         limit: '1',
@@ -101,34 +102,30 @@ app.post("/add", function (request, response) {
   }).then(mapboxResponse => {
     longitude = mapboxResponse.features[0].center[0];
     latitude  = mapboxResponse.features[0].center[1];
+  });
 
-    // Get hash of the current commit
-    return github.gitdata.getReference({
-      owner: owner,
-      repo: repo,
-      ref: 'heads/master'
-    });
-  /*
-  TODO: Handle geocode errors
-  }).catch(error => {
-    console.log(error);
-  */
+  // Get hash of the current commit
+  let githubRef = github.gitdata.getReference({
+    owner: owner,
+    repo: repo,
+    ref: 'heads/master'
   }).then(result => {
+    // And then create a new branch
     return github.gitdata.createReference({
       owner: owner,
       repo: repo,
       ref: `refs/heads/${branchName}`,
       sha: result.data.object.sha
     });
+  });
+  
+  // And then create the file
+  Promise.all([geocode, githubRef]).then(() => {
 
-  }).then(result => {
+    let data = request.body;
 
-
-  let data = request.body;
-
-
-      // https://www.npmjs.com/package/js-yaml#safedump-object---options-
-  let content =
+    // https://www.npmjs.com/package/js-yaml#safedump-object---options-
+    let content =
 `---
 ${yaml.safeDump(request.body)}
 latitude: ${latitude}

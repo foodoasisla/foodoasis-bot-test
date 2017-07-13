@@ -122,12 +122,7 @@ app.post("/add", function (request, response) {
     });
 
   }).then(result => {
-    /*
-    console.log('***********');
-    console.log('create reference');
-    console.log('***********');
-    console.dir(result);
-    */
+
 
   let data = request.body;
 

@@ -1,12 +1,12 @@
 // server.js
 // where your node app starts
 
-const username = 'jimthoburn';
-
-const repositoryName = 'site';
-
+const owner = 'foodoasisla';
+const repo = 'site';
 const getGitHubApp = require('github-app');
- 
+const bodyParser = require('body-parser');
+const yaml = require('js-yaml');
+
 const githubApp = getGitHubApp({
   // Your app id 
   id: process.env.APP_ID,
@@ -15,26 +15,15 @@ const githubApp = getGitHubApp({
   cert: process.env.PRIVATE_KEY.replace(/\\n/g, '\n')
 });
 
+
 // Set up a GitHub app
 var github;
 githubApp.asInstallation(process.env.APP_INSTALLATION).then(gh => {
   github = gh;
 });
 
-
 /*
-githubApp.asInstallation(process.env.APP_INSTALLATION).then(github => {
-  github.issues.createComment({
-    owner: 'jimthoburn',
-    repo: 'foodoasis-bot-test',
-    number: 1,
-    body: 'hello world!'
-  });
-});
-*/
-
-/*
-To find out the installation ID (APP_INSTALLATION)
+// To find out the installation ID (APP_INSTALLATION)
 githubApp.asApp().then(github => {
   console.log("Installations:")
   github.integrations.getInstallations({}).then(console.log);
@@ -50,19 +39,17 @@ var app = express();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
-});
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  const title = request.query.dream;
+app.post("/add", function (request, response) {
+  const title = request.body.title;
   
   // Create a branch
   var branchName = `location-${Math.random().toString(36).substr(2,5)}`;
@@ -73,62 +60,71 @@ app.post("/dreams", function (request, response) {
 
   // Get hash of the current commit
   github.gitdata.getReference({
-    owner: 'jimthoburn',
-    repo: 'foodoasis-bot-test',
+    owner: owner,
+    repo: repo,
     ref: 'heads/master'
   }).then(result => {
+    /*
     console.log('***********');
     console.log('get reference');
     console.log('***********');
     console.dir(result);
+    */
     return github.gitdata.createReference({
-      owner: 'jimthoburn',
-      repo: 'foodoasis-bot-test',
+      owner: owner,
+      repo: repo,
       ref: `refs/heads/${branchName}`,
       sha: result.data.object.sha
     });
 
   }).then(result => {
+    /*
     console.log('***********');
     console.log('create reference');
     console.log('***********');
     console.dir(result);
+    */
+
+      // https://www.npmjs.com/package/js-yaml#safedump-object---options-
+  let content =
+`---
+${yaml.safeDump(request.body)}
+---
+`
+    content = new Buffer(content).toString('base64');
+
     return github.repos.createFile({
-      owner: 'jimthoburn',
-      repo: 'foodoasis-bot-test',
+      owner: owner,
+      repo: repo,
       path: filename,
       branch: branchName,
-      content: 'SGVsbG8gV29ybGQ=', // Hello World
+      content: content,
       message: `Added a new file: ${filename}`
     })
   }).then(result => {
     return github.pullRequests.create({
-      owner: 'jimthoburn',
-      repo: 'foodoasis-bot-test',
+      owner: owner,
+      repo: repo,
       title: `Suggested a new location ${title}`,
       head: branchName,
       base: 'master',
       body: 'Neat!'
     })
   }).then(result => {
-    //console.dir(result);
+    console.dir(result);
+    response.redirect('https://staging.foodoasis.la/add-confirm?pr_link=');
     //console.log(result.data.content.html_url);
   }).catch(error => {
     console.log(error);
+    response.redirect('https://staging.foodoasis.la/add?error=1');
   });
-
 
   // Create a pull request
 
   //dreams.push(request.query.dream);
-  response.sendStatus(200);
+  //response.sendStatus(200);
 });
 
-
-// Simple in-memory store for now
-var dreams = [
-  "Gregor suggested a new location: The Best French Bread Bakery"
-];
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {

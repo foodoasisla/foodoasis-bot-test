@@ -25,20 +25,75 @@
       </h1>
     </header>
 
+    
     <main>
-      <p class="bold">Oh hi,</p>
-      <p>Tell me your hopes and dreams:</p>
-      <form>
-        <input type="text" name="title" maxlength="100" placeholder="Dreams!"
-               value="The Best French Bread Bakery">
-        <input type="text" name="category" maxlength="100" placeholder="Dreams!"
-               value="The Best French Bread Bakery">
-        <button type="submit">Submit</button>
+      <p class="bold">Hi friend!</p>
+      <p>Please complete this form, to add a new location on the <a href="/locations/">map</a>!</p>
+      <form id="addForm" action="/add" method="post" style="margin-top: 3em;">
+        <p>
+          <label>
+            Location Title<br />
+            <input type="text" name="title" id="locationTitle" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Category<br />
+            <input type="text" name="category" id="locationCategory" /><br />
+            <small style="font-style: italic;">Examples: Farmers Market, Community Garden, Food Pantry, Supermarket</small>
+          </label>
+        </p>
+        <p>
+          <label>
+            Street Address<br />
+            <input type="text" name="address_1" id="locationAddress1" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Street Address 2<br />
+            <input type="text" name="address_2" id="locationAddress2" />
+          </label>
+        </p>
+        <p>
+          <label>
+            City<br />
+            <input type="text" name="city" id="locationCity" />
+          </label>
+        </p>
+        <p>
+          State<br />
+          <input type="text" name="state" value="California" disabled />
+        </p>
+        <p>
+          <label>
+            ZIP Code<br />
+            <input type="text" name="zip" id="locationZip" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Website<br />
+            <input type="text" name="website" id="locationWebsite" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Phone<br />
+            <input type="text" name="phone" id="locationPhone" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Is there anything else you’d like to tell us about this location?<br />
+            <textarea name="message" id="userText"></textarea>
+          </label>
+        </p>
+        <p class="action">
+          <button type="submit" id="submit">Add Location</button>
+        </p>
       </form>
-      <section class="dreams">
-        <ul id="dreams">
-        </ul>
-      </section>
+    
     </main>
 
     <footer>
@@ -46,12 +101,6 @@
         Remix this in Glitch
       </a>
     </footer>
-
-    <!-- Your web-app is https, so your scripts need to be too -->
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
-            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
-            crossorigin="anonymous"></script>
-    <script src="/client.js"></script>
 
   </body>
 </html>

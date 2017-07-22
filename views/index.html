@@ -1,0 +1,106 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to Glitch!</title>
+    <meta name="description" content="A cool thing made with Glitch">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>
+        A Dream of the Future
+      </h1>
+    </header>
+
+    
+    <main>
+      <p class="bold">Hi friend!</p>
+      <p>Please complete this form, to add a new location on the <a href="/locations/">map</a>!</p>
+      <form id="addForm" action="/add" method="post" style="margin-top: 3em;">
+        <p>
+          <label>
+            Location Title<br />
+            <input type="text" name="title" id="locationTitle" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Category<br />
+            <input type="text" name="category" id="locationCategory" /><br />
+            <small style="font-style: italic;">Examples: Farmers Market, Community Garden, Food Pantry, Supermarket</small>
+          </label>
+        </p>
+        <p>
+          <label>
+            Street Address<br />
+            <input type="text" name="address_1" id="locationAddress1" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Street Address 2<br />
+            <input type="text" name="address_2" id="locationAddress2" />
+          </label>
+        </p>
+        <p>
+          <label>
+            City<br />
+            <input type="text" name="city" id="locationCity" />
+          </label>
+        </p>
+        <p>
+          State<br />
+          <input type="text" name="state" value="California" disabled />
+        </p>
+        <p>
+          <label>
+            ZIP Code<br />
+            <input type="text" name="zip" id="locationZip" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Website<br />
+            <input type="text" name="website" id="locationWebsite" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Phone<br />
+            <input type="text" name="phone" id="locationPhone" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Is there anything else you’d like to tell us about this location?<br />
+            <textarea name="message" id="userText"></textarea>
+          </label>
+        </p>
+        <p class="action">
+          <button type="submit" id="submit">Add Location</button>
+        </p>
+      </form>
+    
+    </main>
+
+    <footer>
+      <a href="https://glitch.com">
+        Remix this in Glitch
+      </a>
+    </footer>
+
+  </body>
+</html>
